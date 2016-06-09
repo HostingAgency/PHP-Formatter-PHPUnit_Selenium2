@@ -1,7 +1,7 @@
 PHP-Formatter-PHPUnit_Selenium2
 ===============================
 
-Selnium IDE: PHP Formatter for PHPUnit_Extensions_Selenium2TestCase
+Selenium IDE: PHP Formatter for PHPUnit_Extensions_Selenium2TestCase
 
 These codes are inspire from [Webdriver-PHP-Formatter](https://github.com/jupeter/Webdriver-PHP-Formatter)
 
@@ -15,7 +15,7 @@ Build xpi file.
 
 
 ### Install to Firefox browser
-1. Drag and drop `build/phpformatter@zatsubun.com.xpi` file to your Firefox browser.
+1. Drag and drop `build/PHP-Formatter-PHPUnit_Selenium2.xpi` file to your Firefox browser.
 
 
 ### Make Test

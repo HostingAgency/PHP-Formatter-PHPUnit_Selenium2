@@ -12,9 +12,9 @@ function useSeparateEqualsForArray() {
 
 function testClassName(testName) {
     return testName.split(/[^0-9A-Za-z]+/).map(
-	function(x) {
+        function (x) {
             return capitalize(x);
-	}).join('Test');
+        }).join('Test');
 }
 
 function testMethodName(testName) {
@@ -27,39 +27,39 @@ function nonBreakingSpace() {
 
 function array(value) {
     var str = 'array(';
-    for ( var i = 0; i < value.length; i++) {
-	str += string(value[i]);
-	if (i < value.length - 1)
-	    str += ", ";
+    for (var i = 0; i < value.length; i++) {
+        str += string(value[i]);
+        if (i < value.length - 1)
+            str += ", ";
     }
     str += ')';
     return str;
-};
+}
 
-Equals.prototype.toString = function() {
+Equals.prototype.toString = function () {
     return this.e1.toString() + " == " + this.e2.toString();
 };
 
-Equals.prototype.assert = function() {
-    statement = '';
+Equals.prototype.assert = function () {
+    var statement = '';
     statement += "$result = " + this.e2.toString() + ";\n";
-    statement += "$this->assertEquals(" + this.e1.toString() +", $result);";
+    statement += "$this->assertEquals(" + this.e1.toString() + ", $result);";
     return statement;
 };
 
-Equals.prototype.verify = function() {
+Equals.prototype.verify = function () {
     return verify(this.assert());
 };
 
-NotEquals.prototype.toString = function() {
+NotEquals.prototype.toString = function () {
     return this.e1.toString() + " != " + this.e2.toString();
 };
 
-NotEquals.prototype.assert = function() {
+NotEquals.prototype.assert = function () {
     return "$this->assertNotEquals(" + this.e1.toString() + ", " + this.e2.toString() + ");";
 };
 
-NotEquals.prototype.verify = function() {
+NotEquals.prototype.verify = function () {
     return verify(this.assert());
 };
 
@@ -70,7 +70,7 @@ function joinExpression(expression) {
 function statement(expression) {
     var s = expression.toString();
     if (s.length == 0) {
-	return null;
+        return null;
     }
     return s + ';';
 }
@@ -79,7 +79,7 @@ function assignToVariable(type, variable, expression) {
     return "$" + variable + " = " + expression.toString();
 }
 
-variableName = function(value) {
+variableName = function (value) {
     return "$" + value;
 };
 
@@ -97,10 +97,10 @@ function assertFalse(expression) {
 
 function verify(statement) {
     return "try {\n" +
-	indents(1) + statement + "\n" +
-	"} catch (PHPUnit_Framework_AssertionFailedError $e) {\n" +
-	indents(1) + "array_push($this->verificationErrors, $e->__toString());\n" +
-	"}";
+        indents(1) + statement + "\n" +
+        "} catch (PHPUnit_Framework_AssertionFailedError $e) {\n" +
+        indents(1) + "array_push($this->verificationErrors, $e->__toString());\n" +
+        "}";
 }
 
 function verifyTrue(expression) {
@@ -111,7 +111,7 @@ function verifyFalse(expression) {
     return verify(assertFalse(expression));
 }
 
-RegexpMatch.prototype.toString = function() {
+RegexpMatch.prototype.toString = function () {
     return "(bool)preg_match('/" + this.pattern.replace(/\//g, "\\/") + "/'," + this.expression + ")";
 };
 
@@ -130,7 +130,7 @@ function assertOrVerifyFailure(line, isAssert) {
     var message = '"expected failure"';
     var failStatement = "fail(" + message + ");";
     return "try { " + line + " " + failStatement + "} catch (Exception $e) {}";
-};
+}
 
 function pause(milliseconds) {
     return "usleep(" + parseInt(milliseconds, 10) + ");";
@@ -141,8 +141,8 @@ function echo(message) {
 }
 
 function formatComment(comment) {
-    return comment.comment.replace(/.+/mg, function(str) {
-	return "// " + str;
+    return comment.comment.replace(/.+/mg, function (str) {
+        return "// " + str;
     });
 }
 
@@ -157,18 +157,18 @@ function formatSuite(testSuite, filename) {
     suiteClass = suiteClass[0].toUpperCase() + suiteClass.substring(1);
 
     var formattedSuite = "<phpunit>\n"
-	+ indents(1) + "<testsuites>\n"
-	+ indents(2) + "<testsuite name='" + suiteClass + "'>\n";
+        + indents(1) + "<testsuites>\n"
+        + indents(2) + "<testsuite name='" + suiteClass + "'>\n";
 
     for (var i = 0; i < testSuite.tests.length; ++i) {
-	var testClass = testSuite.tests[i].getTitle();
-	formattedSuite += indents(3)
-            + "<file>" + testClass + "<file>\n";
+        var testClass = testSuite.tests[i].getTitle();
+        formattedSuite += indents(3)
+        + "<file>" + testClass + "<file>\n";
     }
 
     formattedSuite += indents(2) + "</testsuite>\n"
-	+ indents(1) + "</testsuites>\n"
-	+ "</phpunit>\n";
+    + indents(1) + "</testsuites>\n"
+    + "</phpunit>\n";
 
     return formattedSuite;
 }
@@ -188,10 +188,10 @@ this.options = {
 };
 
 options.header =
-    "<?php\n" 
-    + "\n" 
+    "<?php\n"
+    + "\n"
     + "class ${className} extends ${extendedClass}\n"
-    + "{\n" 
+    + "{\n"
     + indents(1) + "/**\n"
     + indents(1) + " * Setup\n"
     + indents(1) + " */\n"
@@ -230,149 +230,151 @@ this.testcaseExtension = '.php';
 this.suiteExtension = '.xml';
 this.webdriver = true;
 
-WDAPI.Driver = function() {
+WDAPI.Driver = function () {
     this.ref = '$this';
 };
 
-WDAPI.Driver.searchContext = function(locatorType, locator) {
+WDAPI.Driver.searchContext = function (locatorType, locator) {
     var locatorString = xlateArgument(locator);
     switch (locatorType) {
-    case 'xpath':
-	return '$this->byXPath(' + locatorString + ')';
-    case 'css':
-	return '$this->byCssSelector(' + locatorString + ')';
-    case 'id':
-	return '$this->byId(' + locatorString + ')';
-    case 'link':
-	return '$this->byLinkText(' + locatorString + ')';
-    case 'name':
-	return '$this->byName(' + locatorString + ')';
-    case 'tag_name':
-	return '$this->by("tag name", ' + locatorString + ')';
+        case 'xpath':
+            return '$this->byXPath(' + locatorString + ')';
+        case 'css':
+            return '$this->byCssSelector(' + locatorString + ')';
+        case 'id':
+            return '$this->byId(' + locatorString + ')';
+        case 'link':
+            return '$this->byLinkText(' + locatorString + ')';
+        case 'name':
+            return '$this->byName(' + locatorString + ')';
+        case 'tag_name':
+            return '$this->by("tag name", ' + locatorString + ')';
     }
     throw 'Error: unknown strategy [' + locatorType + '] for locator [' + locator + ']';
 };
 
-WDAPI.Driver.prototype.back = function() {
+WDAPI.Driver.prototype.back = function () {
     return this.ref + "->back()";
 };
 
-WDAPI.Driver.prototype.close = function() {
+WDAPI.Driver.prototype.close = function () {
     return this.ref + "->close()";
 };
 
-WDAPI.Driver.prototype.findElement = function(locatorType, locator) {
+WDAPI.Driver.prototype.findElement = function (locatorType, locator) {
     //return new WDAPI.Element(this.ref + "->findElement(" + WDAPI.Driver.searchContext(locatorType, locator) + ")");
     return new WDAPI.Element(WDAPI.Driver.searchContext(locatorType, locator));
 };
 
-WDAPI.Driver.prototype.findElements = function(locatorType, locator) {
+WDAPI.Driver.prototype.findElements = function (locatorType, locator) {
     //return new WDAPI.ElementList(this.ref + "->findElements(" + WDAPI.Driver.searchContext(locatorType, locator) + ")");
     return new WDAPI.ElementList(WDAPI.Driver.searchContext(locatorType, locator));
 };
 
-WDAPI.Driver.prototype.getCurrentUrl = function() {
+WDAPI.Driver.prototype.getCurrentUrl = function () {
     return this.ref + "->url()";
 };
 
-WDAPI.Driver.prototype.get = function(url) {
-    if (url.length > 1 && (url.substring(1,8) == "http://" || url.substring(1,9) == "https://")) { // url is quoted
-	return this.ref + "->url(" + url + ")";
+WDAPI.Driver.prototype.get = function (url) {
+    if (url.length > 1 && (url.substring(1, 8) == "http://" || url.substring(1, 9) == "https://")) { // url is quoted
+        return this.ref + "->url(" + url + ")";
     } else {
-	//return this.ref + "->url($this->baseUrl + " + url + ")";
-	return this.ref + "->url(" + url + ")";
+        //return this.ref + "->url($this->baseUrl + " + url + ")";
+        return this.ref + "->url(" + url + ")";
     }
 };
 
-WDAPI.Driver.prototype.getTitle = function() {
+WDAPI.Driver.prototype.getTitle = function () {
     return this.ref + "->title()";
 };
 
-WDAPI.Driver.prototype.refresh = function() {
+WDAPI.Driver.prototype.refresh = function () {
     return this.ref + "->refresh()";
 };
 
-WDAPI.Driver.prototype.isTextPresent = function() {
+WDAPI.Driver.prototype.isTextPresent = function () {
     return this.ref + "->refresh()";
 };
 
 
-
-
-WDAPI.Element = function(ref) {
+WDAPI.Element = function (ref) {
     this.ref = ref;
 };
 
-WDAPI.Element.prototype.clear = function() {
+WDAPI.Element.prototype.clear = function () {
     return this.ref + "->clear()";
 };
 
-WDAPI.Element.prototype.click = function() {
+WDAPI.Element.prototype.click = function () {
     return this.ref + "->click()";
 };
 
-WDAPI.Element.prototype.getAttribute = function(attributeName) {
+WDAPI.Element.prototype.getAttribute = function (attributeName) {
     return this.ref + "->attribute(" + xlateArgument(attributeName) + ")";
 };
 
-WDAPI.Element.prototype.getText = function() {
+WDAPI.Element.prototype.getText = function () {
     return this.ref + "->text()";
 };
 
-WDAPI.Element.prototype.isDisplayed = function() {
+WDAPI.Element.prototype.isDisplayed = function () {
     return this.ref + "->displayed()";
 };
 
-WDAPI.Element.prototype.isSelected = function() {
+WDAPI.Element.prototype.isSelected = function () {
     return this.ref + "->selected()";
 };
 
-WDAPI.Element.prototype.sendKeys = function(text) {
+WDAPI.Element.prototype.sendKeys = function (text) {
     return "$this->keys(" + xlateArgument(text) + ")";
 };
 
-WDAPI.Element.prototype.submit = function() {
+WDAPI.Element.prototype.submit = function () {
     return this.ref + "->submit()";
 };
 
-WDAPI.Element.prototype.select = function(label) {
+WDAPI.Element.prototype.select = function (label) {
     return "$this->select(" + this.ref + ")->selectOptionByLabel(" + xlateArgument(label) + ")";
 };
 
-WDAPI.Element.prototype.setValue = function(value) {
+WDAPI.Element.prototype.setValue = function (value) {
     return this.ref + "->value(" + xlateArgument(value) + ")";
 };
 
-WDAPI.ElementList = function(ref) {
+WDAPI.ElementList = function (ref) {
     this.ref = ref;
 };
 
-WDAPI.ElementList.prototype.getItem = function(index) {
+WDAPI.ElementList.prototype.getItem = function (index) {
     return this.ref + "[" + index + "]";
 };
 
-WDAPI.ElementList.prototype.getSize = function() {
+WDAPI.ElementList.prototype.getSize = function () {
     return this.ref + "->size()";
 };
 
-WDAPI.Utils = function() {
+WDAPI.Utils = function () {
 };
-
-
-
 
 //////////////////////////////////////////////////////////////////////
 // overwrite webdriver.js
 //////////////////////////////////////////////////////////////////////
 
-SeleniumWebDriverAdaptor.prototype.isTextPresent = function() {
+SeleniumWebDriverAdaptor.prototype.isTextPresent = function () {
     var target = this.rawArgs[0];
     return '(bool)strpos(strip_tags($this->source()), ' + "'" + target + "'" + ')';
-}
+};
 
-SeleniumWebDriverAdaptor.prototype.type = function(elementLocator, text) {
-  var locator = this._elementLocator(this.rawArgs[0]);
-  var driver = new WDAPI.Driver();
-  var webElement = driver.findElement(locator.type, locator.string);
-  return webElement.setValue(this.rawArgs[1]);
+SeleniumWebDriverAdaptor.prototype.type = function (elementLocator, text) {
+    var locator = this._elementLocator(this.rawArgs[0]);
+    var driver = new WDAPI.Driver();
+    var webElement = driver.findElement(locator.type, locator.string);
+    return webElement.setValue(this.rawArgs[1]);
+};
+
+SeleniumWebDriverAdaptor.prototype.isElementPresent = function (elementLocator) {
+    var locator = this._elementLocator(this.rawArgs[0]);
+    var driver = new WDAPI.Driver();
+    var webElement = driver.findElement(locator.type, locator.string);
+    return webElement.isDisplayed();
 };
